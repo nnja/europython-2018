@@ -1,6 +1,7 @@
 autoscale: true
 build-lists: true
-slidenumbers: true
+slidenumbers: false
+theme: Nina Theme Final
 footer: ![inline](images/twitter.png) [@nnja](http://www.twitter.com/nnja)
 
 [.hide-footer]
@@ -10,17 +11,18 @@ footer: ![inline](images/twitter.png) [@nnja](http://www.twitter.com/nnja)
 ## Nina Zakharenko
 # Code Review Skills for Pythonistas
 ## ![inline](images/twitter.png) @nnja
-## bit.ly/py-code-review
+## [bit.ly/pycodereview](bit.ly/pycodereview)
 
 ^
 - Hi. I'm Nina.
 - I've been writing code professionally for over a decade, and I've worked at companies you might have heard of, like HBO, Meetup, and reddit 
 - These days I work at Microsoft as a Cloud Developer Advocate
-- That's our mascot bit. If you think bit is cute, find me after the talk for a sticker.
+- That's our mascot bit. If you think bit is cute, find me after the talk for a sticker or a pin.
 - Today we're going to talk about code review skills for pythonistas
 - Show of hands:
 	- how many have been a part of code reviews?
-	- how many of you have only had positive code review experiences? 
+	- how many of you have only had positive code review experiences?
+- The slides are available online, follow along or share with your coworkers
 
 <!--
 
@@ -44,6 +46,7 @@ TODO
 - check speaker notes in powerpoint
 - watch original talk and take notes
 - make hot links in slides
+- talk about how to share linter settings. 
 
 - talk about pre-commit hooks, include code
 
@@ -63,6 +66,22 @@ think about less slides, how to condense them
 Add bit about checking in with yourself. Have you eaten, gotten enough to drink? Do you need a walk? Are you stressed?
 
 -->
+
+---
+
+[.hide-footer] 
+
+# Livetweets
+
+## use **#europython2018**
+## ![inline](images/twitter.png) @nnja
+
+^
+- I want to try something brand new with this talk
+- If you're learning something new
+- excited about what you've heard today
+- share a tweet. use the hashtag europython2018
+- and @-mention me. my username is nnja. like ninja, without the i. 
 
 ---
 
@@ -91,6 +110,17 @@ Today, I’ll talk about: [*]
 ^
 - next, I’ll give specific examples of how to be an effective reviewer, **[*]** and an effective submitter **[*]**
 - lastly, I’ll share how to use these tools to build a stronger team
+
+
+---
+
+# What will you get out of this talk?
+
+- **Novice?** - Comprehensive overview of code review best practices
+- **Intermediate?** - Tooling & automation
+- **Advanced?** - Hardest part -- performing reviews with empathy
+
+<!-- TODO -->
 
 ---
 
@@ -251,7 +281,7 @@ What are some apparent code review frustrations?
 - Find Bugs
 - Shared Ownership
 - Shared Knowledge
-- Reduce "I Quit" Factor
+- Reduce "Lottery Factor"
 - Leave a Paper Trail
 
 ^
@@ -355,9 +385,9 @@ Present the facts:
 
 - Distinguishes personal taste from functionality
 - Should be agreed upon before hand
-- Go [beyond PEP8](https://www.youtube.com/watch?v=wf-BqAjZb8M)
-- See: Google's [`pyguide.md`](https://github.com/google/styleguide/blob/gh-pages/pyguide.md)
-- Great codebases are written by a team, look like they were written by an individual.
+- Go beyond [PEP8](https://www.python.org/dev/peps/pep-0008/?)
+- See: Google's [`pyguide.md`](https://github.com/google/styleguide/blob/gh-pages/pyguide.md) or [plone styleguide](https://docs.plone.org/develop/styleguide/python.html)
+- Great codebases are written by a team, but look like they were written by an individual.
 
 ^ 
 - What’s a style guide? [*]
@@ -371,9 +401,50 @@ Present the facts:
 
 ---
 
-# Formatters - Black
+[.hide-footer] 
 
-- TODO
+# Formatters
+## [Black](https://github.com/ambv/black), [YAPF](https://github.com/google/yapf), [autopep8](https://github.com/hhatto/autopep8)
+
+![inline](https://camo.githubusercontent.com/f2cd273070089ac5ff0addf35d1ebdbc44f150ce/687474703a2f2f73686172652e6b656e6e657468726569747a2e6f72672f324c326d31553141336d304c2f53637265656e25323053686f74253230323031382d30332d31352532306174253230362e32312e3034253230414d2e706e67)
+
+
+
+^ 
+- autopep8 is least strict, just formats code to apply to pep8
+- black is the uncompromising python formatter
+- not very configurable 
+- you give up all control to it's defaults
+- but easy to use -- just run all the code through the formatter on save
+
+---
+
+# Use `vulture.py` to find dead code
+
+[.build-lists: false]
+
+- find unreachable code
+- helps keep a codebase clean
+
+```shell
+$ pip install vulture
+$ vulture script.py package/
+```
+
+[.footer:[github.com/jendrikseipp/vulture](https://github.com/jendrikseipp/vulture)]
+
+^ 
+- Vulture finds unused and unreachable code in Python programs using static code analysis
+- because python is dynamic, vulture can make mistakes -- so it's good practice to double check the results
+
+---
+
+# git Pre-commit Hooks
+
+- enforce styling
+- run linting
+- check for TODOs, debugger statements, unused imports
+- fail on linting errors
 
 ---
 
@@ -466,283 +537,17 @@ How do we implement a culture of code review?
 
 --- 
 
-# #1: Be a great reviewer
-
----
-
-![fit](images/comic-orig.png)
-
-^
-Therapist asks: 
-- why do you think you’re so hostile in code reviews?
-Dev laments: 
-- if only I had been more popular in HS
-- code review should not look like an appointment with your therapist. 
-- Approach it objectively and without ego. Need to leave emotions behind. 
-- Have empathy
-- hostility is especially not necessary
-
----
-
-## Be Objective<br><br><br>
-### [fit] “**this** method is missing a docstring”<br>_instead of_ <br>“**you** forgot to write a docstring”
-
-^
-- Be objective. [*]
-- this method is missing a doctoring [*]
-- instead of [*]
-- you forgot to write a doctoring [*]
-Reviews are a learning opportunity, not a chance to catch someone being wrong.
-
----
-
-# [fit] Ask Questions Don’t Give Answers
-
-- “Would it make more sense if... ?”
-- “Did you think about... ? ”
-
-^
-Ask Questions, don’t give answers [*]
-- would it make more sense if… ? [*]
-- did you think about… ? [*]
-
----
-
-# [fit] Offer suggestions
-
-- “it might be easier to”
-- “we tend to do it this way”
-
-^
-Offer Suggestions [*]
-- say things like
-- it might be easier to… [*]
-- we tend to do it this way instead… [*]
-It’s better to offer suggestions than to give ultimatums
-
----
-
-# [fit] Avoid these terms
-
-- Simply
-- Easily
-- Just
-- Obviously
-- Well, actually...
-
-^
-Avoid these terms: [advance]
-- Simply, Easily, Just, Obviously.
-- They’re condescending!
-- If it was so obvious, the submitter would not have done it in the first place.
-- They might be missing context, or unaware of a concept. [advance]
-- Well, actually is another one to avoid. You say it when someone says something mostly correct, but you interrupt them to make a minor correction
-
----
-
-## [fit] ... now, simply
-![inline 120%](https://static1.squarespace.com/static/56899d00c21b8690d5be08c0/t/569d13f305caa74dde7d6382/1455403600845/yoga+for+kids+is+great+exercies?format=500w)
-
-^
-- [anecdote] I'm not sure if any of you practice yoga, but this happens in my class all the time. The teacher will twist herself into a pretzel, and then tell the students to “now simply… 
-- [advance]
-- touch your feet behind your head
--I don’t think any of  you would consider this simple! I certainly don't
-
----
-
-# [fit] Have Clear Feedback
-
-- Strongly support your opinions
-- Share **How & Why**
-- Link to supporting blogs, stackoverflow examples, or documentation.
-
-^
-- To be effective, you need to have clear feedback `[*]`
-- Your opinions need to be strongly supported to have maximum impact `[*]`
-- Share how you would implement your suggestion, and why you think the change is necessary  `[*]`
-- Link to blogs, documentation, and other resources that back up your opinions. `[*]`
-- Don’t feign surprise if someone doesn’t know something, even if you consider it a basic concept. 
-- *gasp* I can’t believe Dave doesn’t know about the singleton design pattern.
-
----
-
-# [fit] This is **not** clear feedback
-
-
-![inline](https://itblackbelt.files.wordpress.com/2015/02/81590207_0b4a7878fd.jpg)
-
----
-
-
-# [fit] Compliment good work and<br>great ideas
-
-![inline](images/compliments.png)
-
-^
-- Remember to compliment good work and great ideas
-- I like to leave a thumbs up when I see:
-- a good refactoring, some code clean up, or a particularly elegant solution
-- Reviews shouldn’t be all about the bad
-
----
-
-# Don't be a perfectionist
-
-
-![inline](images/bettercode.png)
-
-^
-- You don’t want to be a perfectionist.
-- this tweet says it better than I can
-- “The goal is better code, not exactly the code you would have written”
-
----
-
-# Don’t be a Perfectionist
-
- - For big issues, don’t let perfect get in the way of perfectly acceptable.
- - Prioritize what’s important to you.
- - Usually 90% there is good enough.
-
-^
-- [1] for big issues, don’t let perfect get in the way of perfectly acceptable
-- [2] prioritize what’s important to you
-- [3] usually 90% of the way there is good enough
-- When you press for complete perfectionism, you take ownership away from the person who wrote the code.
-It takes away their feelings of accomplishment and creativity.
-
----
-
-# It’s OK to Nit-Pick
-
- - Syntax Issues
- - Spelling Errors
- - Poor Variable Names
- - Missing corner-cases
-<br>
- Save the nit-picks for last, after any pressing architecture, design, or other large scale issues have been addressed.
- 
-^
-Don’t be a perfectionist, but it’s OK to Nitpick the small stuff.
-- [1] syntax issues
-- [2] spelling errors
-- [3] bad variable names
-[4] missing corner-cases
-You might ask:
-- What’s the harm in letting a few of these pass by?
-Broken window theory 
-- if I see sloppy code, I assume it’s OK to check in sloppy code. 
-- Save the nit picks for last, after you’ve addressed the big stuff like
-architecture concerns
-or
-design decisions
-
----
-
-### Avoid Burn-Out
-Studies show reviewer should look at 200-400 lines of code at a time for maximum impact[^1].
-
-![inline 125%](images/burnout1.png)
-
-[^1]: <sub>https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/</sub>
-
-[.hide-footer]
-
-^
-As a reviewer, you want to avoid getting burned out
-Studies show that you should only look at 200-400 lines of code at a time for maximum impact
-
----
-
-### Avoid Burn-Out
-
-Limit Reviews to 200-400 lines between 60 and 90 minutes, then take a break[^1].
-
-![inline 125%](images/burnout2.png)
-
-[^1]: <sub>https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/</sub>
-
-[.hide-footer]
-
-^
-In practice, reviewing between 200 and 400 lines over 60 to 90 minutes will let you find 70-90% of the bugs. 
-So, if 10 bugs existed in the code, a properly conducted review would find between 7 and 9 of them.
-Studies show after 500 lines, the ability to find bugs drops dramatically
-- If the code stops making sense, you’re too tired. You might miss something.
-
----
-
-# Do Reviews in 24-48 hours
-
-![inline](images/waiting.png)
-
-^
-- Good rule of thumb: Do Reviews in 24-48 hours after they’re submitted.
-- This is especially easy when reviews are small. 500 lines of code
-- This lets you look at reviews incrementally, prevents buildup
-- Also means the code is fresh in the submitter’s mind for questions
-- [advance] don’t want to end up like this guy, who’s still waiting for a code review.
-
----
-
-# Define Done
-
- - Let the submitter know if you approve, or if you’re waiting for changes.
- - Use consistent language
-	 - LGTM or Changes Requested
- - Follow up when the submitter says they fixed something
-
-^
-- For good communication, Define Done [advance]
-- When you’re finished, say if the review is complete or if you’re waiting for the submitter to make changes [advance]
-- Use consistent language. when you’re done you can say My personal favorite: ship it! or lgtm.
-- If the submitter needs to push code based on your comments, say ‘Changes Requested’
-- Make sure you follow up and actually the check code when the submitter says they pushed a fix.
-
---- 
-
-# [fit] How can we be a Great Reviewer?
-
-- Have Empathy
-- Watch your Language
-- Have Clear Feedback
-- Give Compliments
-- Don’t be a Perfectionist
-
-^
-- How can you be a great reviewer?
-- Have Empathy
-- Watch your Language
-- Have clear Feedback
-- Give compliments for good work
-- Don’t be a perfectionist
-
----
-
-# [fit] How can we be a Great Reviewer?
-
- - Avoid Burn Out
- - Complete in 24-48 hours
- - Define Done
-
-^
-- Avoid Burn out. Take Breaks
-- But, don’t leave your teammates hanging. Finish reviews in 24-48 hours.
-- Lastly, define done.
-
---- 
-
 # Be a Great Submitter
 
 ^
-- We’ve spent time talking about how to be a great reviewer
 - There’s 2 sides of the coin
-- For effective reviews, we need to learn how to be a great submitter too.
+- For effective reviews, we need to learn how to be a great submitter, not just a great reviewer
 
 ---
 
-![100%](https://media.licdn.com/dms/image/C4E12AQEjp8NBgapHNA/article-inline_image-shrink_1500_2232/0?e=2129500800&v=beta&t=V-pMHwiGXJ93GYvmR-dcIATlpoh9QQUixeP8oBbFK4c)
+[.hide-footer] 
+
+![fit](images/subrev.jpeg)
 
 ---
 
@@ -751,7 +556,6 @@ Studies show after 500 lines, the ability to find bugs drops dramatically
 ![inline](https://totalmerchantresources.com/wp-content/uploads/2014/04/Loan-approval-stamp.png)
 
 ^
-- ## **[*** halfway point]**
 - Q: What’s rubber stamping? 
 - When a submitted solution is so complex, the Reviewer thinks it’s obvious the author knows what they’re doing.
 - They just approve the code without fully understanding it.
@@ -772,7 +576,7 @@ Studies show after 500 lines, the ability to find bugs drops dramatically
 
 > Good code is like a good joke.
 It needs no explanation.
-- Russ Olse
+- Russ Olsen
 
 ^
 - Russ Olsen said it best.
@@ -794,6 +598,7 @@ Stages of Review
 <!-- TODO this slide is confusing -->
 
 ^
+- ## **[*** halfway point]**
 - Let’s go through the stages of a Review
 - 0: before you submit it
 - 1: submitted
@@ -886,6 +691,7 @@ methods?
 
  - Is my code secure?
  - Will it scale?
+ - Is it maintainable?
  - Is it resilient against outages?
  
  <sub>Tip: Read the Checklist Manifesto</sub>
@@ -1048,6 +854,28 @@ We can use automated tools and static analysis to streamline the review process
 - This way the reviewer doesn’t have to waste time pointing out syntax problems
 
 <!-- TODO NZ talk about formatting, and how some tools allow you to automatically format on save -->
+
+---
+
+# Pylint rule:<br>`trailing-comma-tuple`
+
+```python
+foo = (1,
+       3,
+       4,
+       )
+
+bar = 2,
+```
+
+^ 
+- take the time to learn your linter and it's arguments
+- common gotcha
+- refactoring parameter arguments
+- copy and paste out
+- end up with a trailing comma, and vague errors and test failures
+- this has messed up my day multiple times
+- pylint to the rescue, since version 1.7!! 
 
 ---
 
@@ -1245,6 +1073,280 @@ Record the result of the conversation in the PR for posterity.
 
 ---
 
+# #1: Be a great reviewer
+
+^
+- We’ve spent time talking about how to be a great submitter.
+- Let's cover the other side of the story
+
+---
+
+![fit](images/comic-orig.png)
+
+^
+Therapist asks: 
+- why do you think you’re so hostile in code reviews?
+Dev laments: 
+- if only I had been more popular in HS
+- code review should not look like an appointment with your therapist. 
+- Approach it objectively and without ego. Need to leave emotions behind. 
+- Have empathy towards others.  hostility is especially not necessary
+- Have empathy towards yourself. 
+- Check in before you start. Are you hungry? Angry? Tired? Dehydrated? Do you need water, coffee or a break?
+
+---
+
+## Be Objective<br><br><br>
+### [fit] “**this** method is missing a docstring”<br>_instead of_ <br>“**you** forgot to write a docstring”
+
+^
+- Be objective. [*]
+- this method is missing a doctoring [*]
+- instead of [*]
+- you forgot to write a doctoring [*]
+Reviews are a learning opportunity, not a chance to catch someone being wrong.
+
+---
+
+# [fit] Ask Questions Don’t Give Answers
+
+- “Would it make more sense if... ?”
+- “Did you think about... ? ”
+
+^
+Ask Questions, don’t give answers [*]
+- would it make more sense if… ? [*]
+- did you think about… ? [*]
+
+---
+
+# [fit] Offer suggestions
+
+- “it might be easier to”
+- “we tend to do it this way”
+
+^
+Offer Suggestions [*]
+- say things like
+- it might be easier to… [*]
+- we tend to do it this way instead… [*]
+It’s better to offer suggestions than to give ultimatums
+
+---
+
+# [fit] Avoid these terms
+
+- Simply
+- Easily
+- Just
+- Obviously
+- Well, actually...
+
+^
+Avoid these terms: [advance]
+- Simply, Easily, Just, Obviously.
+- They’re condescending!
+- If it was so obvious, the submitter would not have done it in the first place.
+- They might be missing context, or unaware of a concept. [advance]
+- Well, actually is another one to avoid. You say it when someone says something mostly correct, but you interrupt them to make a minor correction
+
+---
+
+## [fit] ... now, simply
+![inline 120%](https://static1.squarespace.com/static/56899d00c21b8690d5be08c0/t/569d13f305caa74dde7d6382/1455403600845/yoga+for+kids+is+great+exercies?format=500w)
+
+^
+- [anecdote] I'm not sure if any of you practice yoga, but this happens in my class all the time. The teacher will twist herself into a pretzel, and then tell the students to “now simply… 
+- [advance]
+- touch your feet behind your head
+-I don’t think any of  you would consider this simple! I certainly don't
+
+---
+
+# [fit] Have Clear Feedback
+
+- Strongly support your opinions
+- Share **How & Why**
+- Link to supporting blogs, stackoverflow examples, or documentation.
+
+^
+- To be effective, you need to have clear feedback `[*]`
+- Your opinions need to be strongly supported to have maximum impact `[*]`
+- Share how you would implement your suggestion, and why you think the change is necessary  `[*]`
+- Link to blogs, documentation, and other resources that back up your opinions. `[*]`
+- Don’t feign surprise if someone doesn’t know something, even if you consider it a basic concept. 
+- *gasp* I can’t believe Dave doesn’t know about the singleton design pattern.
+- Cut down on the snark and innuendos, this isn't the time or the place. 
+- Stay away from critical emoji-only feedback
+
+---
+
+# [fit] This is **not** clear feedback
+
+
+![inline](https://itblackbelt.files.wordpress.com/2015/02/81590207_0b4a7878fd.jpg)
+
+---
+
+
+# [fit] Compliment good work and<br>great ideas
+
+![inline](images/compliments.png)
+
+^
+- Remember to compliment good work and great ideas
+- I like to leave a thumbs up when I see:
+- a good refactoring, some code clean up, or a particularly elegant solution
+- Reviews shouldn’t be all about the bad
+
+---
+
+# Don't be a perfectionist
+
+
+![inline](images/bettercode.png)
+
+^
+- You don’t want to be a perfectionist.
+- this tweet says it better than I can
+- “The goal is better code, not exactly the code you would have written”
+
+---
+
+# Don’t be a Perfectionist
+
+ - For big issues, don’t let perfect get in the way of perfectly acceptable.
+ - Prioritize what’s important to you.
+ - Usually 90% there is good enough.
+
+^
+- [1] for big issues, don’t let perfect get in the way of perfectly acceptable
+- [2] prioritize what’s important to you
+- [3] usually 90% of the way there is good enough
+- When you press for complete perfectionism, you take ownership away from the person who wrote the code.
+It takes away their feelings of accomplishment and creativity.
+
+---
+
+# It’s OK to Nit-Pick
+
+ - Syntax Issues
+ - Spelling Errors
+ - Poor Variable Names
+ - Missing corner-cases
+<br>
+ Save the nit-picks for last, after any pressing architecture, design, or other large scale issues have been addressed.
+ 
+^
+Don’t be a perfectionist, but it’s OK to Nitpick the small stuff.
+- [1] syntax issues
+- [2] spelling errors
+- [3] bad variable names
+[4] missing corner-cases
+You might ask:
+- What’s the harm in letting a few of these pass by?
+Broken window theory 
+- if I see sloppy code, I assume it’s OK to check in sloppy code. 
+- Save the nit picks for last, after you’ve addressed the big stuff like
+architecture concerns
+or
+design decisions
+
+---
+
+### Avoid Burn-Out
+Studies show reviewer should look at 200-400 lines of code at a time for maximum impact[^1].
+
+![inline 125%](images/burnout1.png)
+
+[^1]: <sub>https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/</sub>
+
+[.hide-footer]
+
+^
+As a reviewer, you want to avoid getting burned out
+Studies show that you should only look at 200-400 lines of code at a time for maximum impact
+
+---
+
+### Avoid Burn-Out
+
+Limit Reviews to 200-400 lines between 60 and 90 minutes, then take a break[^1].
+
+![inline 125%](images/burnout2.png)
+
+[^1]: <sub>https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/</sub>
+
+[.hide-footer]
+
+^
+In practice, reviewing between 200 and 400 lines over 60 to 90 minutes will let you find 70-90% of the bugs. 
+So, if 10 bugs existed in the code, a properly conducted review would find between 7 and 9 of them.
+Studies show after 500 lines, the ability to find bugs drops dramatically
+- If the code stops making sense, you’re too tired. You might miss something.
+
+---
+
+# Do Reviews in 24-48 hours
+
+![inline](images/waiting.png)
+
+^
+- Good rule of thumb: Do Reviews in 24-48 hours after they’re submitted.
+- This is especially easy when reviews are small. 500 lines of code
+- This lets you look at reviews incrementally, prevents buildup
+- Also means the code is fresh in the submitter’s mind for questions
+- [advance] don’t want to end up like this guy, who’s still waiting for a code review.
+
+---
+
+# Define Done
+
+ - Let the submitter know if you approve, or if you’re waiting for changes.
+ - Use consistent language
+	 - LGTM or Changes Requested
+ - Follow up when the submitter says they fixed something
+
+^
+- For good communication, Define Done [advance]
+- When you’re finished, say if the review is complete or if you’re waiting for the submitter to make changes [advance]
+- Use consistent language. when you’re done you can say My personal favorite: ship it! or lgtm.
+- If the submitter needs to push code based on your comments, say ‘Changes Requested’
+- Make sure you follow up and actually the check code when the submitter says they pushed a fix.
+
+--- 
+
+# [fit] How can we be a Great Reviewer?
+
+- Have Empathy
+- Watch your Language
+- Have Clear Feedback
+- Give Compliments
+- Don’t be a Perfectionist
+
+^
+- How can you be a great reviewer?
+- Have Empathy
+- Watch your Language
+- Have clear Feedback
+- Give compliments for good work
+- Don’t be a perfectionist
+
+---
+
+# [fit] How can we be a Great Reviewer?
+
+ - Avoid Burn Out
+ - Complete in 24-48 hours
+ - Define Done
+
+^
+- Avoid Burn out. Take Breaks
+- But, don’t leave your teammates hanging. Finish reviews in 24-48 hours.
+- Lastly, define done.
+
+--- 
+
 # Code Reviews Build a **Stronger Team**
 
 ![left](images/success.jpg)
@@ -1302,9 +1404,7 @@ When you onboard:
 
  - Junior devs start by doing pair-reviews with a more experienced teammate.
  - Use it as a mentorship opportunity.
-
-
-> “When your team succeeds, you succeed.”
+ - When your team succeeds, you succeed.
 
 <!-- TODO find a way to work in some of kate heddlesons blog post -->
 
@@ -1340,7 +1440,7 @@ Use your culture of review and knowledge sharing as a competitive advantage to m
 # [fit] Remember...
 
  - Allocate the time
- - Develop, don’t force the culture
+ - Develop, don’t force the process
  - Not one size fits all
  - Or a one stop fix
 	- Use in addition to tests, QA, etc for maximum impact
@@ -1398,6 +1498,8 @@ when you have less WTF moments every day, you have happier developers.
  
 ---
 
+[.build-lists: false]
+
 # [fit] Resources & Additional Reading
 * [Microsoft Study on Effective Code Review](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bosu2015useful.pdf)
 * [Code Reviews: Just do it](https://blog.codinghorror.com/code-reviews-just-do-it/)
@@ -1407,12 +1509,15 @@ when you have less WTF moments every day, you have happier developers.
 * [Rebecca's Rules for Constructive Code Review](https://storify.com/ReBeccaOrg/rebecca-s-rules-for-constructive-code-reviews)
 * [My Big Fat Scary Pull Request](https://medium.com/@jdan/my-big-fat-scary-pull-request-2c8ac394540e#.yhs96vbxu)
 * [The Gentle Art of Patch Review - Sage Sharp](http://sage.thesharps.us/2014/09/01/the-gentle-art-of-patch-review/)
+* [Watch: Raymond Hettinger - Beyond PEP8](https://www.youtube.com/watch?v=wf-BqAjZb8M)
 
 ---
 
+[.build-lists: false]
+
 # [fit] Example Style Guides
 * [Python](https://www.python.org/dev/peps/pep-0008/)
-* [Javascript](https://github.com/airbnb/javascript)
+* [Plone](https://docs.plone.org/develop/styleguide/python.html)
 
 Google has many good, but strict style guides at: [https://github.com/google/styleguide](https://github.com/google/styleguide)
 
